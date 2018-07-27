@@ -1,0 +1,59 @@
+<div class = "container"
+	fxLayout = "row">
+
+<div fxFlex = "20">
+
+<mat-sidenav-container class = sidenav>
+	<mat-nav-list>
+		<mat-list-item >
+			<form enctype="multipart/form-data" method="post">
+
+			<div >
+
+			<label  >Data Source <input type="file" id = "picked" #picked 
+				(change) = "onPicked(picked)"
+				size="60" height="20" width="100" style="display:none;"/></label>
+			</div>
+			</form>		
+		</mat-list-item>
+		<mat-list-item><a href="#">Data Preparation</a>
+		</mat-list-item>
+		<mat-list-item><a href="#">Data Visualization</a>
+		</mat-list-item>
+		<mat-list-item><a href="#">Algorithm</a>
+		</mat-list-item>
+		<mat-list-item><a href="#">Dashboard</a>
+		</mat-list-item>
+
+	</mat-nav-list>
+</mat-sidenav-container>
+
+</div>
+
+<!-- drag drop componet imported here -->
+<div fxFlex="80" >
+<div *ngIf = "uploaderService.parseData" class= "datatable">	
+
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+  <ng-container *ngFor="let column of displayedColumns" matColumnDef= "{{column}}">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
+    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky : true"></tr>
+  <tr mat-row *matRowDef="let row; columns:displayedColumns;"></tr>
+</table>
+
+</div>
+<div *ngIf = "uploaderService.parseData">
+<h2 >Data Description</h2>
+{{descriptionService.getdescrip()}}
+
+</div>
+</div>
+
+
+</div>
+
+

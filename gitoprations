@@ -1,0 +1,19 @@
+git init
+
+git status
+
+git add .
+
+git commit -m "message"
+
+git log --oneline
+
+git log
+
+git remote add origin <repository url>
+
+git push -u origin master
+
+git clone <repository URL>
+
+kill -9 $(lsof -t -i:3000)

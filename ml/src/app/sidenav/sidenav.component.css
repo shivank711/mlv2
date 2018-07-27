@@ -1,0 +1,23 @@
+.sidenav{
+	position: fixed;
+	top:72px;
+	bottom:0;
+	left:0;
+	right:0;
+	background: #eee;
+	column-width: 250px;
+	max-width: 250px;
+	max-height: 250px;	
+}
+table{
+
+	width:100%;
+
+ 
+}
+
+.datatable{
+
+	height:  500px;
+	overflow: auto;
+}
