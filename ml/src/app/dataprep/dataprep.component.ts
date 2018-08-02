@@ -56,12 +56,11 @@ singleArray : any[] = [];
  		//console.log(Object.keys(data));
 
  		for (let key of Object.keys(data)) {  
- 		 for(let darr of Object.values(data[key])){
+ 		for(let darr of Object.values(data[key])){
   				console.log(darr);
 
 			}
 		}
-		 debugger;
 
 
  		// for(let varr in data){

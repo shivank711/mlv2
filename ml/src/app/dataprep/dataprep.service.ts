@@ -8,13 +8,14 @@ export class DataprepService {
 variables : any = [];
  val : any = [];
  col : any = [];
+  selvars : any = [];
   constructor(private http : HttpClient, private uploaderService : UploaderService) { }
 
 
 sendvariables(args: any[]){
 
 	console.log(args);
-
+	this.selvars = args;
 	this.variables = encodeURIComponent(JSON.stringify(args));
 	var file = this.uploaderService.filename;
 	var url = "http://localhost:5004/selectvariable/" + file + "/" + this.variables;

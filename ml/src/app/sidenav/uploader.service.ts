@@ -120,7 +120,7 @@ ngDoCheck(file : File){
 
            })
            this.dataSource = this.parseData.data;
-           debugger;
+           
            this.displayedColumn = this.parseData.meta.fields;
            console.log("in the function s")
            console.log(this.displayedColumn)

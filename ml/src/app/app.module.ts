@@ -65,9 +65,13 @@ import {
   MatTreeModule,
 } from '@angular/material';
 import { DataprepComponent } from './dataprep/dataprep.component';
+import { AlgorithmComponent } from './algorithm/algorithm.component';
 
 const appRoutes: Routes = [
-{path :'dataprep.component.html', component : DataprepComponent}
+{path :'dataprep.component.html', component : DataprepComponent},
+{path : 'algorithm.component.html', component : AlgorithmComponent}
+
+
 ];
 
 
@@ -83,7 +87,8 @@ const appRoutes: Routes = [
     DatasourceComponent,
     DragdropComponent,
     BodyComponent,
-    DataprepComponent
+    DataprepComponent,
+    AlgorithmComponent
     
   ],
   imports: [
@@ -125,7 +130,7 @@ const appRoutes: Routes = [
   MatNativeDateModule,
   MatPaginatorModule,
   MatProgressSpinnerModule,
-  MatRadioModule,
+  MatRadioModule,  
   MatRippleModule,
   MatSliderModule,
   MatSnackBarModule,

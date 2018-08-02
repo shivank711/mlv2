@@ -169,10 +169,14 @@ def outlier(filename, col):
 def getvars(variables):
     if request.method == 'GET':
         string = urllib.unquote(variables)
-        print string
-        return jsonify({'successful':'test'})
+
+
 
 #ml algorithms
+
+
+
+
 
 
 
