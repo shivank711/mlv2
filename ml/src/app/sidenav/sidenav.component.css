@@ -5,8 +5,8 @@
 	left:0;
 	right:0;
 	background: #eee;
-	column-width: 250px;
-	max-width: 250px;
+	column-width: 175px;
+	max-width: 175px;
 	max-height: 250px;	
 }
 table{
@@ -18,6 +18,6 @@ table{
 
 .datatable{
 
-	height:  500px;
+	height:  380px;
 	overflow: auto;
 }

@@ -15,9 +15,11 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn import preprocessing
 from scipy import stats
 import numpy as np
+from urllib import unquote
+import urllib 
 
-UPLOAD_FOLDER = '/home/shivank/pyang/pyback/uploads'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'csv'])
+UPLOAD_FOLDER = '/home/das/Documents/mlv1/pyback/uploads'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'csv', 'xlsx'])
 
 df = pd.DataFrame()
 
@@ -77,8 +79,7 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             mongo.save_file(filename, request.files["file"])
             
-            df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print(df.shape) 
+            df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename)) 
             return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename, mimetype = 'text/csv')
 
@@ -97,9 +98,10 @@ def descriptive(filename):
 def missing(filename):
     if request.method =="GET":
         df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        missing = []
+        missing = {}
         for _ in df.columns:
-            missing.append("'{}' : '{}'".format(_, df[_].isnull().sum()))
+            #missing.append("{} : {}".format(_, df[_].isnull().sum()))
+            missing[_] = df[_].isnull().sum()
         return jsonify(missing)
 #find data type of the columns in the dataframe
 
@@ -108,7 +110,8 @@ def dtype(filename):
     if request.method == 'GET':
         df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         dff = df.dtypes
-        return dff.to_json()        
+        arr = dff.to_json()
+        return arr  
 
 #find correlation 
 @app.route('/corr/<filename>', methods =['GET'])
@@ -160,6 +163,18 @@ def outlier(filename, col):
         # df = df[df[col]<q]
         df = df[(np.abs(stats.zscore(df[col])) < 3)]
         return df.to_json()
+
+#variable selection
+@app.route('/variableselection/<variables>', methods = ['GET'])
+def getvars(variables):
+    if request.method == 'GET':
+        string = urllib.unquote(variables)
+        print string
+        return jsonify({'successful':'test'})
+
+#ml algorithms
+
+
 
 
 if __name__ == '__main__':

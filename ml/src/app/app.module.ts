@@ -38,8 +38,11 @@ import {MatTableModule} from '@angular/material/table';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {DescriptionService} from './sidenav/description.service';
 import 'hammerjs';
 import {enableProdMode} from '@angular/core'
+import { RouterModule, Routes } from '@angular/router';
+import {DataprepService} from './dataprep/dataprep.service';
 import {
   MatAutocompleteModule,
   MatBadgeModule,
@@ -61,6 +64,15 @@ import {
   MatTooltipModule,
   MatTreeModule,
 } from '@angular/material';
+import { DataprepComponent } from './dataprep/dataprep.component';
+
+const appRoutes: Routes = [
+{path :'dataprep.component.html', component : DataprepComponent}
+];
+
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,7 +82,8 @@ import {
     SidenavComponent,
     DatasourceComponent,
     DragdropComponent,
-    BodyComponent
+    BodyComponent,
+    DataprepComponent
     
   ],
   imports: [
@@ -120,10 +133,17 @@ import {
   MatStepperModule,
   MatTabsModule,
   MatTooltipModule,
-  MatTreeModule
-  
+  MatTreeModule,
+  RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: false } // <-- debugging purposes only
+    )
   ],
-  providers: [ UploaderService],
+  providers: [ 
+    UploaderService,
+    DescriptionService,
+    DataprepService,
+  ],
   entryComponents: [],
   bootstrap: [AppComponent]
 })

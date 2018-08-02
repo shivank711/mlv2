@@ -1,3 +1,4 @@
+<base href="/">
 <div class = "container"
 	fxLayout = "row">
 
@@ -10,19 +11,20 @@
 
 			<div >
 
-			<label  >Data Source <input type="file" id = "picked" #picked 
+			<label  >Upload <input type="file" id = "picked" #picked 
 				(change) = "onPicked(picked)"
 				size="60" height="20" width="100" style="display:none;"/></label>
 			</div>
 			</form>		
 		</mat-list-item>
-		<mat-list-item><a href="#">Data Preparation</a>
+		<mat-list-item><a routerLink="./dataprep.component.html" routerLinkActive="active">Process</a>
 		</mat-list-item>
-		<mat-list-item><a href="#">Data Visualization</a>
+	
+		<mat-list-item><a href="#">Model</a>
 		</mat-list-item>
-		<mat-list-item><a href="#">Algorithm</a>
+		<mat-list-item><a href="#">Optimize</a>
 		</mat-list-item>
-		<mat-list-item><a href="#">Dashboard</a>
+		<mat-list-item><a href="#">Deploy</a>
 		</mat-list-item>
 
 	</mat-nav-list>
@@ -31,6 +33,7 @@
 </div>
 
 <!-- drag drop componet imported here -->
+
 <div fxFlex="80" >
 <div *ngIf = "uploaderService.parseData" class= "datatable">	
 
@@ -46,13 +49,11 @@
 </table>
 
 </div>
-<div *ngIf = "uploaderService.parseData">
-<h2 >Data Description</h2>
-{{descriptionService.getdescrip()}}
-
+<div >
+<router-outlet></router-outlet>
+	
 </div>
 </div>
-
 
 </div>
 

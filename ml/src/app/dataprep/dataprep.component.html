@@ -1,0 +1,99 @@
+<div class = "container"
+  fxLayout = "row"
+>
+<div fxFlex = "65">
+<mat-card class ="variable-card">
+<div>
+
+<h3>Variable Selection</h3>
+
+<div id="interest">
+
+    <div class="interest-list">
+
+        <form [formGroup]="interestFormGroup" (ngSubmit)="submit()">
+
+            <div *ngFor="let interest of interests; let i = index" >
+                <mat-checkbox class="example-margin" 
+                (change)="onChange($event)" [value]="interest">{{interest}}</mat-checkbox>
+            </div>
+
+            <button mat-button>Submit</button>
+        </form>
+
+    </div>
+
+</div>
+</div>
+
+</mat-card>
+</div>
+<div fxFlex = "35">
+
+<mat-card class = "missing-values">
+  <h3>Missing values 
+  </h3>
+<ul *ngFor = "let item of singleArray">
+  <li>
+ {{item.cols}} 
+ {{item.vals}}
+  </li>
+</ul>
+</mat-card>
+
+</div>
+</div>
+
+<!-- new div for data description -->
+<div class = "container"
+  fxLayout = "column"
+>
+<mat-card>
+  <div>
+<h3>Column Statistics</h3>
+<tr *ngFor= "let col of col">
+  {{col}} 
+</tr>
+
+  </div>
+
+</mat-card>
+
+<mat-card>
+  <div>
+    <h3>
+      Correlation Matrix
+    </h3>
+    </div>
+</mat-card>
+
+
+</div>
+
+
+<!-- <mat-card class="example-card">
+  <mat-card-header>
+	
+    <mat-card-title>Variable Selection</mat-card-title>
+    <mat-card-subtitle>Select the variables you want in your model</mat-card-subtitle>
+  </mat-card-header>
+  
+  <mat-card-content>
+<div *ngFor="let interest of interests; let i = index" >
+                <mat-checkbox class="example-margin" 
+                (change)="onChange($event)" [value]="interest">{{interest}}</mat-checkbox>
+            </div>
+    
+  </mat-card-content>
+  <mat-card-actions>
+    
+    <button mat-button>SUBMIT</button>
+  </mat-card-actions>
+  </form>
+
+    </div>
+</mat-card>
+
+ -->
+
+

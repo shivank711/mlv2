@@ -23,37 +23,47 @@ var arry : any[] = [];
 var dummyData : any[] = [];
 var dataSource : any[] = [];
 var displayedColumn : any[] =[];
-
+var miss_col : any[] = [];
+var miss_val : any[] = []; 
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css'],
-  providers : [UploaderService]
+  
 })
 
 export class SidenavComponent implements OnInit {
-  
+  miss_table : any[] = [];
+  obj : any[] = [];
 
-  constructor(public uploaderService: UploaderService, public descriptionService : DescriptionService) {
-     
- 
+  constructor(
+    private uploaderService : UploaderService,
+    private descriptionService : DescriptionService
+    ){
+    
  this.displayedColumns = this.uploaderService.displayedColumn;
  this.dataSource = new MatTableDataSource(this.uploaderService.dataSource);
-     // this.dataSource.paginator = this.paginator;
-   }
- @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
- col = this.uploaderService.displayedColumn;
+     // this.dataSource.paginator = this.paginator;
+}
+@ViewChild(MatPaginator) paginator: MatPaginator;
+@ViewChild(MatSort) sort: MatSort;
+
+col = this.uploaderService.displayedColumn;
 
 ngDoCheck()  {
 
+
+  
  this.displayedColumns = this.uploaderService.displayedColumn;
  this.dataSource = new MatTableDataSource(this.uploaderService.dataSource);
-
  this.dataSource.sort = this.sort;  
+
+
+ 
 }
 
+ miss_col = ["Variable Name", "Number of Missing Values"];
  displayedColumns = this.uploaderService.displayedColumn;
  dataSource = new MatTableDataSource(this.uploaderService.dataSource);
 
@@ -62,8 +72,15 @@ ngDoCheck()  {
 //   columnName : this.displayedColumns,
 //   dataSource : this.dataSource,
 
-// }
-  ngOnInit() {
+// // }
+
+ display2(){
+
+ console.log("number of missing values in the table =------>>>>>>")
+ // console.log(this.obj.miss_val);
+
+}
+ngOnInit() {
  
  this.dataSource.paginator = this.paginator;        
   }
@@ -77,7 +94,8 @@ ngDoCheck()  {
     const file = input.files[0];
     const data = '';
     if (file) {
-      this.uploaderService.upload(file);    
+      this.uploaderService.upload(file);
+      this.descriptionService.getmissing(file);    
     }
 
   }
@@ -100,17 +118,6 @@ ngDoCheck()  {
 
 // }
 
-  ds(){
-    console.log(this.uploaderService.dataSource)
-    return this.uploaderService.dataSource
-
-
-  }
-  dc(){
-    console.log(this.uploaderService.displayedColumn)
-    return this.uploaderService.displayedColumn
-    
-  }
   display(){
     // console.log(this.displayedColumns)
     // console.log(this.dataSource)
@@ -145,7 +152,7 @@ ngDoCheck()  {
     
     // console.log(arr)
     
-    return 
+    
   }
   console.log(arr)
   }

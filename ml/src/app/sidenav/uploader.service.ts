@@ -10,7 +10,10 @@ import { catchError, last, map, tap } from 'rxjs/operators';
 import { PapaParseService } from 'ngx-papaparse';
 
 
-@Injectable()
+
+@Injectable({
+  providedIn: 'root',
+})
 export class UploaderService {
   data: any = {};
   csvData: any[] = [];
@@ -19,12 +22,23 @@ export class UploaderService {
   dataSource : any;
   displayedColumn: any;
   results :any[] = [];
+  dummydata : any;
+  t:any;
+  filename : any;
   constructor(
     private http: HttpClient,
     private papa: PapaParseService
-    ) {
+    ){
+    this.dummydata = "this is dummy data";
+    this.displayedColumn=[];
+    this.t = Math.random();
   }
 
+ngDoCheck(file : File){
+
+  this.displayedColumn = this.parseData.meta.fields
+  this.filename = file.name
+}
   private handleError (error: any) {
     // In a real world app, we might use a remote logging infrastructure
     // We'd also dig deeper into the error to get a better message
@@ -71,11 +85,13 @@ export class UploaderService {
 // csv file should not contain spaces in header names;
     if (!file) { return; }
     const vm = this;
-    console.log(file.name)
-    
-     const formData = new FormData();
+    console.log(file)
+    this.filename = file.name;
+    console.log("filename that is to be sent")
+    console.log(this.filename);
+    const formData = new FormData();
 
-      formData.append('file',file);
+     formData.append('file',file);
     
     console.log(formData);
     
@@ -104,8 +120,9 @@ export class UploaderService {
 
            })
            this.dataSource = this.parseData.data;
+           debugger;
            this.displayedColumn = this.parseData.meta.fields;
-           console.log("DATA")
+           console.log("in the function s")
            console.log(this.displayedColumn)
            console.log("this.parsedata.fields[0]----------====== - >")
            console.log(this.parseData.meta.fields[0])
