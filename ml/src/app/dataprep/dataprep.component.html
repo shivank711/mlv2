@@ -61,23 +61,36 @@
   fxLayout = "column"
 >
 <mat-card>
-  <div>
+  <div class = "colstat">
 <h3>Column Statistics</h3>
-<tr *ngFor= "let col of col">
+
+<div class= "flex-grid" *ngFor= "let col of numeric">
   {{col}} 
-</tr>
+  <p *ngFor= "let dat of dis_col">
+  {{dat}} : {{dis_dat[col][dat]}}, &nbsp;  
+  </p>
+
+ 
+</div>
 
   </div>
 
 </mat-card>
 
 <mat-card>
-  <div>
+  <div class = "corrmat">
     <h3>
       Correlation Matrix
     </h3>
-    </div>
+  <div class = "flex-grid" *ngFor= "let col of numeric">
+  {{col}}
+  <p *ngFor = "let dat of numeric">
+    {{dat}} : {{corr[col][dat]}}, &nbsp; 
+  </p>  
+  </div>
+</div>
 </mat-card>
+
 <mat-card>
   <h3>Data Cleansing 
   </h3>
@@ -91,7 +104,6 @@
   <h4>Remove Outliers
   </h4>
 </mat-card>
-
 </div>
   
 

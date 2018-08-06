@@ -18,10 +18,12 @@ dis_dat : any = [];
 dis_col : any = [];
 col : any = [];
 val : any = [];
+numeric : any = [];
   interestFormGroup : FormGroup
   interests:any;
   selected: any;
 singleArray : any[] = [];
+corr : any = [];
   constructor(private uploaderService : UploaderService, private formBuilder: FormBuilder, private dataprepService : DataprepService
   ) {
   	// this.variables = this.uploaderService.displayedColumn;
@@ -46,29 +48,19 @@ singleArray : any[] = [];
                         });
 	}
 	})
+	this.dataprepService.findnumeric().subscribe(data => {
+		console.log("sending numeric data ---->>>>>>>>>>>>>>>")
+		console.log(data);
+		this.numeric = data;
+	})
  	this.dataprepService.senddescription().subscribe(data => {
  		console.log("this is in data description ---->>>");
  		console.log(data);
  		this.dis_dat = data;
  		this.dis_col = ["count" ,"mean" ,"std", "min", "25%", "50%" ,"75%" ,"max"];
- 		this.variables = this.uploaderService.displayedColumn;
- 		
- 		//console.log(Object.keys(data));
-
- 		for (let key of Object.keys(data)) {  
- 		for(let darr of Object.values(data[key])){
-  				console.log(darr);
-
-			}
-		}
-
-
- 		// for(let varr in data){
- 		// 	for(let darr of this.dis_col){
- 		// 	console.log(varr[darr])	
- 		// 	}
- 			
- 		// } 
+ 	})
+ 	this.dataprepService.findcorr().subscribe(data => {
+ 		this.corr = data;
  	})
 
   }
@@ -91,8 +83,8 @@ onChange(event) {
 
   	  // this.variables = this.uploaderService.displayedColumn;
   	  // console.log("this is in the data prep component");
-  	  this.variables = this.uploaderService.displayedColumn;
-  	   console.log(this.variables);
+  	  // this.variables = this.uploaderService.displayedColumn;
+  	  //  console.log(this.variables);
 
   }
   // getdescription(){

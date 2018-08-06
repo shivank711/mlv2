@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {DataprepService} from '../dataprep/dataprep.service';
 import { FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
-
+import {AlgorithmService} from './algorithm.service';
 @Component({
   selector: 'app-algorithm',
   templateUrl: './algorithm.component.html',
@@ -15,10 +15,17 @@ export class AlgorithmComponent implements OnInit {
 	algorithm : string[] = [];
 	algo : any;
 	selAlgo : string;
-  constructor(private dataprepSerice : DataprepService) { }
+	value : any;
+  max_depth : any;
+  min_samples_leaf:any;
+  min_samples_split:any;
+  n_estimators : any;
+  bootstrap : any;
+  
+  constructor(private dataprepSerice : DataprepService, private algorithmService: AlgorithmService) { }
 
   ngOnInit() {
-
+  	this.value = 60;
   	this.interests = this.dataprepSerice.selvars;
  	console.log(this.interests);
  	var len = this.interests.interests.length;
@@ -54,4 +61,8 @@ this.algo = event.value;
 
   	console.log(this.selvarr)
   }
+  createModel(){
+  this.algorithmService.createmodel(this.dependent_var, this.algo, this.value, this.max_depth, this.min_samples_leaf, this.min_samples_split, this.n_estimators)
+  }
+
 }

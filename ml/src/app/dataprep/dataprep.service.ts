@@ -16,7 +16,7 @@ sendvariables(args: any[]){
 
 	console.log(args);
 	this.selvars = args;
-	this.variables = encodeURIComponent(JSON.stringify(args));
+	this.variables = encodeURI(JSON.stringify(args));
 	var file = this.uploaderService.filename;
 	var url = "http://localhost:5004/selectvariable/" + file + "/" + this.variables;
 	console.log(this.variables)
@@ -37,6 +37,13 @@ senddescription(){
 
 }
 
-
+findnumeric(){
+	var url = "http://localhost:5004/getnumericcol/" + this.uploaderService.filename;
+	return this.http.get(url)
+}
+findcorr(){
+	var url = "http://localhost:5004/corr/" + this.uploaderService.filename;
+	return this.http.get(url)
+}	
 
 }

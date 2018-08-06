@@ -17,6 +17,10 @@ from scipy import stats
 import numpy as np
 from urllib import unquote
 import urllib 
+import yaml
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+
 
 UPLOAD_FOLDER = '/home/das/Documents/mlv1/pyback/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'csv', 'xlsx'])
@@ -85,6 +89,28 @@ def upload_file():
 
 #find missing values in the uploaded data and descriptive analytics
 #give file name in the request url, will return describe of all the neumeric columns
+
+@app.route('/getnumericcol/<filename>', methods= ['GET'])
+def getnumericcol(filename):
+    if request.method == "GET":
+        df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        categoricals = []
+        
+        for col, col_type in df.dtypes.iteritems():
+            if col_type == 'O':
+                categoricals.append(col)
+        col_set = df.columns
+        cat_set = categoricals
+        numeric = []
+        # numeric = col_set - cat_set
+        for item in col_set:
+            if item not in cat_set:
+                numeric.append(item)
+        numeric.sort()
+        return jsonify(numeric)
+        # return jsonify({'this':'is success'})        
+
+
 @app.route('/descriptive/<filename>', methods = ['GET'])
 def descriptive(filename):
     if request.method =="GET":
@@ -120,7 +146,7 @@ def correlation(filename):
         df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         corr = df.corr()
         corr = corr.to_json()        
-    return corr
+        return corr
 
 #missing value imputation takes filename col name and method in the url
 
@@ -169,16 +195,90 @@ def outlier(filename, col):
 def getvars(variables):
     if request.method == 'GET':
         string = urllib.unquote(variables)
-
-
+        print string
+        return jsonify({'this': 'success'})
 
 #ml algorithms
 
+# @app.route('/algorithm/<filename>/<algo>/<depvar>/<variables>/<int:value>', methods = ['GET'])
+# def algorithm(filename, algo, depvar, variables,value):
+#     if request.method == 'GET':
+#         value = float(100-value)/100
+#         df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+#         varss = urllib.unquote(variables)
+#         algo = algo
+#         depvar = depvar
+#         print varss
+        #varss = yaml.load(json.dumps(varss))
+        # varss =  json.loads(varss)
+        # cols = []
+        # #depvar = json.dumps(depvar)
+        # for x in varss['interests']:
+        #     if x not in depvar:
+        #         cols.append(x)
+        # dff = df[cols]
+        # print cols
+        # dff = pd.get_dummies(dff)
+        # labels = df[depvar]
+        # features = np.array(dff)
+        # labels = np.array(labels)
+        # train_features, test_features, train_labels, test_labels = train_test_split(features, labels,test_size = value, random_state = 42)
+        # print test_labels
+        # if algo == "Random Forest":
+        #     rf_exp = RandomForestRegressor(n_estimators= 1000, random_state=100)
+        #     rf_exp.fit(train_features, train_labels)
+        #     predictions = rf_exp.predict(test_features)
+        #     errors = abs(predictions - test_labels)
+        #     # print('Average absolute error:', round(np.mean(errors), 2), 'hours.')            
+        #     sr = rf_exp.score(test_features, test_labels)
+        #     print sr
+        #     # mape = np.mean(100 * (errors/test_labels))
+        #     # accuracy = 100 - mape
+        #     # print('Accuracy:', round(accuracy, 2), '%.')    
+        # return jsonify({'this':'success'})
+        #return jsonify(sr)
+@app.route('/algorithm/<filename>', methods = ['POST'])
+def algorithm(filename):
+    if request.method == 'POST':
+        n_estimators = int(request.get_json()['n_estimators'])
+        max_depth= int(request.get_json()['max_depth'])
+        min_samples_leaf= int(request.get_json()['min_samples_leaf'])
+        min_samples_split = int(request.get_json()['min_samples_split'])
+        value = request.get_json()['value']
+        value = float(100-value)/100
+        df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        algo = request.get_json()['algo']
+        dependentvar = request.get_json()['dependentvar']
+        variables = request.get_json()['variables']['interests']
+        cols = []
+        for x in variables:
+            if x not in dependentvar:
+                cols.append(x)
+        dff = df[cols]
+        dff = pd.get_dummies(dff)
+        labels = df[dependentvar]
+        features = np.array(dff)
+        labels = np.array(labels)
+        train_features, test_features, train_labels, test_labels = train_test_split(features, labels,test_size = value, random_state = 42)
+        print ("test_labels " , test_labels.shape)
+        print ("test_features " , test_features.shape)
+        print ("train_labels " , train_labels.shape)
+        print ("train_features " , train_features.shape)
+        if algo == "Random Forest":
+            rf_exp = RandomForestRegressor(n_estimators= n_estimators, random_state=100, max_depth=max_depth, min_samples_split=min_samples_split,min_samples_leaf=min_samples_leaf)
+            rf_exp.fit(train_features, train_labels)
+            predictions = rf_exp.predict(test_features)
+            errors = abs(predictions - test_labels)
+            # print('Average absolute error:', round(np.mean(errors), 2), 'hours.')            
+            sr = rf_exp.score(test_features, test_labels)
+            print sr
+            print predictions
+            print test_labels
+            # mape = np.mean(100 * (errors/test_labels))
+            # accuracy = 100 - mape
+            # print('Accuracy:', round(accuracy, 2), '%.')
 
-
-
-
-
+            return jsonify(sr)    
 
 
 if __name__ == '__main__':

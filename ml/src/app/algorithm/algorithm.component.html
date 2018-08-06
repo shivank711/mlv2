@@ -17,10 +17,64 @@
     {{algo}}
   </mat-radio-button>
 </mat-radio-group>
-<div class="example-selected-value">Your selected is: {{selAlgo}}</div>
-
-
-
-
+<div class="example-selected-value">Your selected algorithm is: {{selAlgo}}</div>
 
 </mat-card>
+<mat-card>
+<div class="rftuning" *ngIf = "selAlgo== 'Random Forest'">
+	<h3>Tuning Parameters
+	</h3>
+  <mat-form-field hintLabel="Max value 99">
+    <input matInput #input maxlength="2" placeholder="max_depth" [(ngModel)] = "this.max_depth">
+    <mat-hint align="end">{{input.value?.length || 0}}/2</mat-hint>
+  </mat-form-field>
+  <mat-form-field hintLabel="Max value 99">
+    <input matInput #input maxlength="2" placeholder="min_samples_split" [(ngModel)] = "this.min_samples_split">
+    <mat-hint align="end">{{input.value?.length || 0}}/2</mat-hint>
+  </mat-form-field>
+  <mat-form-field hintLabel="Max value 99">
+    <input matInput #input maxlength="2" placeholder="min_samples_leaf" [(ngModel)] = "this.min_samples_leaf">
+    <mat-hint align="end">{{input.value?.length || 0}}/2</mat-hint>
+  </mat-form-field>
+  <mat-form-field hintLabel="Max value 999">
+    <input matInput #input maxlength="3" placeholder="n_estimators" [(ngModel)] = "this.n_estimators">
+    <mat-hint align="end">{{input.value?.length || 0}}/3</mat-hint>
+  </mat-form-field>
+  
+  
+  <!-- <mat-form-field>
+    <mat-select placeholder="bootstrap">
+      <mat-option value="option">Option</mat-option>
+    </mat-select>
+    <mat-hint align="end">Here's the dropdown arrow ^</mat-hint>
+  </mat-form-field> -->
+</div>
+</mat-card>
+<!-- 'bootstrap': True,
+ 'max_depth': 70,
+ 'max_features': 'auto',
+ 'min_samples_leaf': 4,
+ 'min_samples_split': 10,
+ 'n_estimators': 400} -->
+<!-- <mat-card *ngIf = "selAlgo == 'Logistics Regression'">
+	<h3>Tuning Parameters
+	</h3>
+</mat-card> -->
+<mat-card>
+<h3>Train Test Data Split
+</h3>
+<span><p>training : {{value}}% </p> 
+<mat-slider
+  thumbLabel
+  tickInterval="1"
+  min="1"
+  max="100"
+  [(ngModel)]= "value"></mat-slider>
+<p>test : {{100-value}} %</p></span>
+
+<button mat-button (click)="createModel();">Create Model</button>
+	</mat-card>
+  <mat-card *ngIf = "algorithmService.rsqr"> <h3>R square of the model: {{algorithmService.rsqr}}</h3></mat-card>
+
+
+

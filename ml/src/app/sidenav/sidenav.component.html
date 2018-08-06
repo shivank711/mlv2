@@ -2,7 +2,7 @@
 <div class = "container"
 	fxLayout = "row">
 
-<div fxFlex = "20">
+<div fxFlex = "15">
 
 <mat-sidenav-container class = sidenav>
 	<mat-nav-list>
@@ -34,7 +34,7 @@
 
 <!-- drag drop componet imported here -->
 
-<div fxFlex="80" >
+<div fxFlex="85" >
 <div *ngIf = "uploaderService.parseData" class= "datatable">	
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
@@ -55,5 +55,4 @@
 </div>
 </div>
 </div>
-
 
