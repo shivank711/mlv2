@@ -21,7 +21,7 @@
 
 </mat-card>
 <mat-card>
-<div class="rftuning" *ngIf = "selAlgo== 'Random Forest'">
+<div class="rftuning" *ngIf = "selAlgo== 'Random Forest Regressor'">
 	<h3>Tuning Parameters
 	</h3>
   <mat-form-field hintLabel="Max value 99">
@@ -40,7 +40,14 @@
     <input matInput #input maxlength="3" placeholder="n_estimators" [(ngModel)] = "this.n_estimators">
     <mat-hint align="end">{{input.value?.length || 0}}/3</mat-hint>
   </mat-form-field>
-  
+  <mat-form-field hintLabel="Max value 999">
+    <input matInput #input maxlength="3" placeholder="max_leaf_nodes" [(ngModel)] = "this.max_leaf_nodes">
+    <mat-hint align="end">{{input.value?.length || 0}}/3</mat-hint>
+  </mat-form-field>
+  <mat-form-field hintLabel="Max value 999">
+    <input matInput #input maxlength="3" placeholder="min_weight_fraction_leaf" [(ngModel)] = "this.min_weight_fraction_leaf">
+    <mat-hint align="end">{{input.value?.length || 0}}/3</mat-hint>
+  </mat-form-field>
   
   <!-- <mat-form-field>
     <mat-select placeholder="bootstrap">
@@ -75,6 +82,14 @@
 <button mat-button (click)="createModel();">Create Model</button>
 	</mat-card>
   <mat-card *ngIf = "algorithmService.rsqr"> <h3>R square of the model: {{algorithmService.rsqr}}</h3></mat-card>
+<mat-card>
 
+<img [src]="imageToShow"
+     alt="Place image title"
+     *ngIf="!isImageLoading; else noImageFound">
+  <button mat-button (click)="createplot();">Create Plot
+</button>
+
+</mat-card>
 
 

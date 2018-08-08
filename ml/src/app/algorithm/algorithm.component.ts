@@ -21,7 +21,14 @@ export class AlgorithmComponent implements OnInit {
   min_samples_split:any;
   n_estimators : any;
   bootstrap : any;
-  
+  min_weight_fraction_leaf: any;
+  max_leaf_nodes:any;
+  imgsrc :any;
+
+  imageToShow: any;
+  isImageLoading: boolean;
+
+
   constructor(private dataprepSerice : DataprepService, private algorithmService: AlgorithmService) { }
 
   ngOnInit() {
@@ -36,7 +43,7 @@ export class AlgorithmComponent implements OnInit {
  	}
  	this.algorithm = ["Linear Regression",
 "Logistics Regression",
-"Random Forest",
+"Random Forest Regressor",
 "Decision Trees",
 "Naïve Bayes",
 "SVM",
@@ -62,7 +69,32 @@ this.algo = event.value;
   	console.log(this.selvarr)
   }
   createModel(){
-  this.algorithmService.createmodel(this.dependent_var, this.algo, this.value, this.max_depth, this.min_samples_leaf, this.min_samples_split, this.n_estimators)
+  this.algorithmService.createmodel(this.dependent_var, this.algo, this.value, this.max_depth, this.min_samples_leaf, this.min_samples_split, this.n_estimators, this.min_weight_fraction_leaf, this.max_leaf_nodes)
   }
 
+createImageFromBlob(image: Blob) {
+   let reader = new FileReader();
+   reader.addEventListener("load", () => {
+      this.imageToShow = reader.result;
+   }, false);
+
+   if (image) {
+      reader.readAsDataURL(image);
+   }
+  }
+
+
+  createplot(){
+    this.algorithmService.plot().subscribe(data => {
+        this.createImageFromBlob(data);
+        this.isImageLoading = false;
+      }, error => {
+        this.isImageLoading = false;
+        console.log(error);
+      });
+        
+
+  }
+   
+  
 }

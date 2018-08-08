@@ -20,7 +20,12 @@ import urllib
 import yaml
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-
+import matplotlib as pl
+pl.use('Agg')
+import matplotlib.pyplot as plt
+from io import StringIO
+from flask import send_file
+from sklearn.model_selection import GridSearchCV
 
 UPLOAD_FOLDER = '/home/das/Documents/mlv1/pyback/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'csv', 'xlsx'])
@@ -239,47 +244,79 @@ def getvars(variables):
         #return jsonify(sr)
 @app.route('/algorithm/<filename>', methods = ['POST'])
 def algorithm(filename):
-    if request.method == 'POST':
+    df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    algo = request.get_json()['algo']
+    dependentvar = request.get_json()['dependentvar']
+    variables = request.get_json()['variables']['interests']
+    cols = []
+    for x in variables:
+        if x not in dependentvar:
+            cols.append(x)
+    dff = df[cols]
+    dff = pd.get_dummies(dff)
+    labels = df[dependentvar]
+    features = np.array(dff)
+    labels = np.array(labels)
+    value = request.get_json()['value']
+    value = float(100-value)/100
+    train_features, test_features, train_labels, test_labels = train_test_split(features, labels,test_size = value, random_state = 42)
+
+    if algo == "Random Forest Regressor":
         n_estimators = int(request.get_json()['n_estimators'])
         max_depth= int(request.get_json()['max_depth'])
         min_samples_leaf= int(request.get_json()['min_samples_leaf'])
         min_samples_split = int(request.get_json()['min_samples_split'])
-        value = request.get_json()['value']
-        value = float(100-value)/100
-        df = pd.read_csv(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        algo = request.get_json()['algo']
-        dependentvar = request.get_json()['dependentvar']
-        variables = request.get_json()['variables']['interests']
-        cols = []
-        for x in variables:
-            if x not in dependentvar:
-                cols.append(x)
-        dff = df[cols]
-        dff = pd.get_dummies(dff)
-        labels = df[dependentvar]
-        features = np.array(dff)
-        labels = np.array(labels)
-        train_features, test_features, train_labels, test_labels = train_test_split(features, labels,test_size = value, random_state = 42)
-        print ("test_labels " , test_labels.shape)
-        print ("test_features " , test_features.shape)
-        print ("train_labels " , train_labels.shape)
-        print ("train_features " , train_features.shape)
-        if algo == "Random Forest":
-            rf_exp = RandomForestRegressor(n_estimators= n_estimators, random_state=100, max_depth=max_depth, min_samples_split=min_samples_split,min_samples_leaf=min_samples_leaf)
-            rf_exp.fit(train_features, train_labels)
-            predictions = rf_exp.predict(test_features)
-            errors = abs(predictions - test_labels)
-            # print('Average absolute error:', round(np.mean(errors), 2), 'hours.')            
-            sr = rf_exp.score(test_features, test_labels)
+        min_weight_fraction = float(request.get_json()['min_weight_fraction'])
+        max_leaf_nodes = int(request.get_json()['max_leaf_nodes'])
+            
+        rf_exp = RandomForestRegressor(n_estimators= n_estimators, random_state=100,max_depth=max_depth, min_samples_split=min_samples_split,min_samples_leaf=min_samples_leaf, min_weight_fraction_leaf= min_weight_fraction, max_leaf_nodes=max_leaf_nodes)
+        rf_exp.fit(train_features, train_labels)
+        predictions = rf_exp.predict(test_features)
+        errors = abs(predictions - test_labels)
+        sr = rf_exp.score(test_features, test_labels)            
+        if request.method == 'POST'
+            
             print sr
             print predictions
             print test_labels
-            # mape = np.mean(100 * (errors/test_labels))
-            # accuracy = 100 - mape
-            # print('Accuracy:', round(accuracy, 2), '%.')
+            feature_importances = pd.DataFrame(rf_exp.feature_importances_,
+                                   index = cols,
+                                    columns=['importance']).sort_values('importance',ascending=False)
+            feature_importances= feature_importances.to_dict()
+            print feature_importances
+            score = sr
+            feature_importances.update({'score' : sr})
+            print feature_importances
+            
+            return jsonify(feature_importances)
 
-            return jsonify(sr)    
+        if request.method == 'GET':
+            param_grid = {"n_estimators": np.arange(2, 300, 2),
+              "max_depth": np.arange(1, 28, 1),
+              "min_samples_split": np.arange(1,150,1),
+              "min_samples_leaf": np.arange(1,60,1),
+              "max_leaf_nodes": np.arange(2,60,1),
+              "min_weight_fraction_leaf": np.arange(0.1,0.4, 0.1)}            
 
+
+@app.route('/plot', methods = ['GET'])
+def plot():
+        if request.method == 'GET':
+            x = np.arange(0, 2 * np.pi, 0.01)
+            s = np.cos(x) ** 2
+            plt.plot(x, s)
+
+            plt.xlabel('xlabel(X)')
+            plt.ylabel('ylabel(Y)')
+            plt.title('Simple Graph!')
+            plt.grid(True)
+            #img = StringIO()
+            #fig = plt.figure()
+            plt.savefig('img.png')
+            return send_file('img.png', mimetype='image/png')
+            # response = Response(content_type="image/png")
+            # plt.savefig(response, format="png")
+            # return response
 
 if __name__ == '__main__':
 	app.run(port = 5004, debug = True)

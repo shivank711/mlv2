@@ -15,7 +15,7 @@ selectAlgo : any;
 
    }
 
-createmodel(dep, algo, value, depth, leaf, split, n){
+createmodel(dep, algo, value, depth, leaf, split, n, wtfraction,maxleaf){
 
 console.log("create model")
 //this.vars = this.dataprepService.selvars;
@@ -46,7 +46,10 @@ return this.http.post(url, {
 	max_depth : depth,
 	min_samples_leaf : leaf,
 	min_samples_split : split,
-	n_estimators: n	
+	n_estimators: n,
+	max_leaf_nodes : maxleaf,
+	min_weight_fraction : wtfraction
+
 }).subscribe(data =>{
     data = data;
     console.log(data);
@@ -55,6 +58,10 @@ return this.http.post(url, {
 
 }
 
+plot(){
+	var url = "http://localhost:5004/plot"
+	return this.http.get(url, {responseType : 'blob'})
+}
 }
 
 
